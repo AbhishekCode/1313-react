@@ -12,6 +12,8 @@ var rotateLeft = function (matrix) {
 };
 
 var Tile = function (value, row, column) {
+  if(value == 2)
+      value = 1;
   this.value = value || 0;
   this.row = row || -1;
   this.column = column || -1;
@@ -76,6 +78,14 @@ Board.prototype.addTile = function () {
 
 Board.size = 4;
 
+Board.prototype.lessThanOneThreeCheck = function (sum) {
+   if (sum == 2 || sum == 3 || sum == 5|| sum == 7|| sum == 9 || sum == 11)
+       return true;
+    else
+        return false;
+};
+
+
 Board.prototype.moveLeft = function () {
   var hasChanged = false;
   for (var row = 0; row < Board.size; ++row) {
@@ -83,16 +93,24 @@ Board.prototype.moveLeft = function () {
     var resultRow = [];
     for (var target = 0; target < Board.size; ++target) {
       var targetTile = currentRow.length ? currentRow.shift() : this.addTile();
-      if (currentRow.length > 0 && currentRow[0].value == targetTile.value) {
+//        console.log (" sum "+ currentRow[0].value+targetTile.value );
+       
+     var sum = 0;
+        if(currentRow.length>0)
+            sum = currentRow[0].value + targetTile.value;
+     
+      if (currentRow.length > 0 && ((sum < 13 && this.lessThanOneThreeCheck(sum)) || sum%13 == 0 )
+          /*&& currentRow[0].value == targetTile.value*/) {
         var tile1 = targetTile;
+             console.log ("sum "+sum);
         targetTile = this.addTile(targetTile.value);
         tile1.mergedInto = targetTile;
         var tile2 = currentRow.shift();
         tile2.mergedInto = targetTile;
-        targetTile.value += tile2.value;
+        targetTile.value  = sum;
       }
       resultRow[target] = targetTile;
-      this.won |= (targetTile.value == 2048);
+      this.won |= (targetTile.value == 1313);
       hasChanged |= (targetTile.value != this.cells[row][target].value);
     }
     this.cells[row] = resultRow;
@@ -112,7 +130,7 @@ Board.prototype.setPositions = function () {
   });
 };
 
-Board.fourProbability = 0.1;
+Board.fourProbability = 0.4;
 
 Board.prototype.addRandomTile = function () {
   var emptyCells = [];
@@ -125,7 +143,7 @@ Board.prototype.addRandomTile = function () {
   }
   var index = ~~(Math.random() * emptyCells.length);
   var cell = emptyCells[index];
-  var newValue = Math.random() < Board.fourProbability ? 4 : 2;
+  var newValue = Math.random() < Board.fourProbability ? 2 : 1;
   this.cells[cell.r][cell.c] = this.addTile(newValue);
 };
 
@@ -173,5 +191,6 @@ Board.prototype.hasLost = function () {
       }
     }
   }
+    console.log("canmove "+canMove);
   return !canMove;
 };
