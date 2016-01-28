@@ -126,7 +126,7 @@ Board.prototype.setPositions = function () {
       tile.row = rowIndex;
       tile.column = columnIndex;
       tile.markForDeletion = false;
-    });
+    });9
   });
 };
 
@@ -187,7 +187,9 @@ Board.prototype.hasLost = function () {
         if (newRow < 0 || newRow >= Board.size || newColumn < 0 || newColumn >= Board.size) {
           continue;
         }
-        canMove |= (this.cells[row][column].value == this.cells[newRow][newColumn].value);
+          var sum = this.cells[row][column].value + this.cells[newRow][newColumn].value;
+         
+        canMove |= ( (sum < 13 && this.lessThanOneThreeCheck(sum)) || sum%13 == 0);
       }
     }
   }
