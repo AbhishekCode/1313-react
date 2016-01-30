@@ -79,7 +79,7 @@ Board.prototype.addTile = function () {
 Board.size = 4;
 
 Board.prototype.lessThanOneThreeCheck = function (sum) {
-   if (sum == 2 || sum == 3 || sum == 5|| sum == 7|| sum == 9 || sum == 11)
+   if (sum == 2 || sum == 3 || sum == 5|| sum == 8)
        return true;
     else
         return false;
@@ -110,7 +110,7 @@ Board.prototype.moveLeft = function () {
         targetTile.value  = sum;
       }
       resultRow[target] = targetTile;
-      this.won |= (targetTile.value == 1313);
+      this.won |= (targetTile.value >= 1313);
       hasChanged |= (targetTile.value != this.cells[row][target].value);
     }
     this.cells[row] = resultRow;
